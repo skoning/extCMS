@@ -1,0 +1,9 @@
+<h2>Add Extension</h2>
+{{ form().prepare() }}
+{% do form.setAttribute('action', url('manager', {'action': 'extension', 'controller': 'extension'})) %}
+{{ form().openTag(form)|raw}}
+{{ formRow(form.get('name')) }}
+{{ formRow(form.get('arguments')) }}
+{{ formRow(form.get('code')) }}
+{{ formRow(form.get('submit')) }}
+

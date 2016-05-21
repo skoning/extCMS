@@ -1,0 +1,11 @@
+<h2>{{ translate(action) }}</h2>
+{% do form().prepare() %}
+{% do form.setAttribute('action', url('manager/page-' ~ action, {'action': action, 'id': page.getId() })) %}
+{{ form().openTag(form)|raw}}
+{% if page.getId() is not empty %}
+{{ formElement(form.get('id')) }}
+{% endif %}
+{{ formRow(form.get('pagetitle').setOption('label', translate('pagetitle'))) }}
+{{ formRow(form.get('content').setOption('label', translate('content'))) }}
+{{ formRow(form.get('submit').setAttribute('value', translate('store'))) }}
+{{ form().closeTag()|raw }}

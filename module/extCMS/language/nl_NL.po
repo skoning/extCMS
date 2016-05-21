@@ -1,0 +1,46 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; "
+"charset=iso-8859-1\n"
+"Content-Transfer-Encoding: "
+"8bit\n"
+"Language: nl_NL\n"
+"X-Generator: Poedit "
+"1.8.7.1\n"
+"X-Poedit-Basepath: ../view\n"
+"X-Poedit-KeywordsList: _;"
+"translate\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: ext-"
+"cms/manager/manager-action."
+"twig\n"
+
+msgid "edit"
+msgstr "Bewerken"
+
+msgid "store"
+msgstr "Opslaan"
+
+msgid "content"
+msgstr "Inhoud"
+
+msgid "pagetitle"
+msgstr "Paginatitel"
+
+msgid "Page Not Found"
+msgstr "Pagina niet gevonden!"
+
+msgid "Login"
+msgstr "Aanmelden"
+
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "Username"
+msgstr "Gebruikersnaam"

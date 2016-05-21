@@ -1,0 +1,11 @@
+{% for form in forms %}
+{% do form().prepare() %}
+{% do form.setAttribute('action', url('manager/manager-config')) %}
+{{ form().openTag(form)|raw}}
+{{ formRow(form.get('key')) }}
+{{ formRow(form.get('value')) }}
+{{ formRow(form.get('submit')) }}
+{{ formElement(form.get('isNew')) }}
+{{ form().closeTag(form)|raw }}
+<br />
+{% endfor %}
