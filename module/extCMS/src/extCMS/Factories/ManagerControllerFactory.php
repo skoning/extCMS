@@ -28,6 +28,7 @@ class ManagerControllerFactory extends AbstractActionController implements Facto
   protected final function loginRedirect() {
     $this->redirect()->toUrl($this->url()->fromRoute('manager/login') . '?redirect_url=' . $this->getServiceLocator()->get('request')->getUri()->getPath());
   }
+  
   public final function getEntityManager()
   {
     if( null === $this->em ) {

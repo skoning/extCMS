@@ -6,6 +6,7 @@
         "zendframework",
         "zf2"
     ],
+    "minimum-stability": "dev",
     "homepage": "http://framework.zend.com/",
     "require": {
         "php": ">=5.5",
@@ -17,7 +18,9 @@
         "zf-commons/zfc-twig": "^1.2",
         "ircmaxell/random-lib": "^1.1",
         "neilime/zf2-twb-bundle": "^2.6",
-        "twitter/bootstrap": "^3.3"
+        "twitter/bootstrap": "^3.3",
+        "saeven/zf2-circlical-trans": "^0.2.3@dev",
+        "saeven/zf2-poeditor": "^0.4.0@dev"
     },
     "require-dev": {
         "zendframework/zend-developer-tools": "dev-master"

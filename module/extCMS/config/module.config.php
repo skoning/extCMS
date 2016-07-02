@@ -2,6 +2,7 @@
 namespace extCMS;
 
 use extCMS\Entity\Security\User;
+use Zend\Config\Config;
 
 $config = array(
   'router' => array(
@@ -104,6 +105,9 @@ $config = array(
         }
       ),
     ),
+    'authenticationadapter' => array(
+      'orm_default' => 'extCMS\Manager\AuthenticationAdapterFactory',
+    ),
     'driver' => array(
        __NAMESPACE__ . '_driver' => array(
         'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
@@ -117,10 +121,26 @@ $config = array(
       )
     )
   ),
+  'doctrine_factories' => array(
+    'authenticationadapter' => 'extCMS\Factories\AuthenticationAdapterFactory',
+  ),
   'service_manager' => array(
     'factories' => array(
       'extCMSManager' => 'extCMS\Factories\extCMSManager',
       'extCMS' => 'extCMS\Factories\extCMS',
+      'GA' => 'extCMS\Factories\GA',
+      'extCMSConfig' => function($sl) {
+        $em = $sl->get('doctrine.entitymanager.orm_default');
+        $config = array();
+        
+        $entries = $em->getRepository('extCMS\Entity\Config')->findAll();
+        
+        foreach ($entries as $entry) {
+          $config[$entry->getKey()] = $entry->getValue();
+        }
+        
+        return new Config($config, true);
+      }
     )
   ),
   'translator' => array(
@@ -133,6 +153,9 @@ $config = array(
       ),
     ),
   ),
+  'zfctwig' => array(
+    'extensions' => array()
+  )
 );
 
 // Get twig extensions

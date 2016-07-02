@@ -23,25 +23,19 @@ class extCMSManager implements FactoryInterface
      * @var Translator $translator
      */
     $this->config = new Config($this->getConfig());
-    
     $translator = $this->sl->get('translator');
     $translator->setLocale($this->config->get('manager_locale', 'en_US'));
     
     return $this;
   }
   
+  public function get( $key, $default = null )
+  {
+    return $this->config->get($key, $default);
+  }
+  
   private function getConfig()
   {
-    $config = array();
-    
-    $entries = $this->em->getRepository('extCMS\Entity\Config')->findAll();
-    
-    foreach ($entries as $entry) {
-      $config[$entry->getKey()] = $entry->getValue();
-    }
-
-    $this->sl->setService('extCMSConfig', new Config($config, true));
-    
-    return $config;
+    return $this->sl->get('extCMSConfig')->toArray();
   }
 }

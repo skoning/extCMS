@@ -2,6 +2,7 @@
 namespace extCMS\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity
@@ -25,6 +26,12 @@ class Config
    */
   protected $value;
   
+  /**
+   * @ORM\Column( name="type", type="string", length=20 )
+   * @var string
+   */
+  protected $type;
+  
   public function setKey( $key )
   {
     $this->key = $key;
@@ -40,9 +47,19 @@ class Config
     $this->value = $value;
   }
   
-  public function getValue()
+  public function getValue( $useType = true )
   {
-    return $this->value;
+    if( !$useType ) 
+      return $this->value;
+    
+    switch( $this->type ) {
+      case 'boolean':
+        return ( $this->value == 'false' || $this->value == '0') ? false : true;
+      case 'string':
+        return $this->value;
+      default:
+        throw new Exception('Type not implemented');
+    }
   }
   
   public function exchangeArray($data)
@@ -54,8 +71,8 @@ class Config
   public function getArray()
   {
     $arr = array();
-    $arr['key'] = $this->key;
-    $arr['value'] = $this->value;
+    $arr['key'] = $this->getKey();
+    $arr['value'] = $this->getValue(false);
     return $arr;
   }
 }

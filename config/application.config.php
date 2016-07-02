@@ -15,6 +15,7 @@ return array(
 	      'extCMS',
         'ZfcTwig',
 	      'ZendDeveloperTools',
+	      'CirclicalTranslationEditor'
     ),
 
 

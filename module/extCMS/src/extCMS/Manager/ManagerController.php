@@ -18,11 +18,10 @@ class ManagerController extends ManagerControllerFactory
    */
   public function loginAction()
   {
-    $view = $this->getEvent()->getViewModel();
-    $view->setTemplate('managerLayout');
-    
+    $view = new ViewModel();
     $childView = new ViewModel();
     $childView->setTemplate('ext-cms/manager/login');
+    $view->setTemplate('managerLayout');
     
     $form = new LoginForm('login');
     $form->setAttribute('action', $this->url('manager/login'));
@@ -36,7 +35,7 @@ class ManagerController extends ManagerControllerFactory
      */
     $authService = $this->getServiceLocator()->get('extCMSAuthenticationService');
     $adapter = $authService->getAdapter();
-    
+    $childView->setVariable('form', $form);
     if ($request->isPost()) {
       $data = $request->getPost();
       $form->setData($data);
@@ -48,24 +47,43 @@ class ManagerController extends ManagerControllerFactory
         $adapter->setCredential($data['password']);
         $result = $authService->authenticate();
         
-        if ($result->isValid()) {
+        if($result->isValid()) {
           $authService->getStorage()->write($result->getIdentity());
           $this->redirect()->toUrl($data['redirect_url'] ?: '/home');
         }
-        return array('form' => $form, 'message' => 'Credentials wrong');
+        
+        if( $result->getCode() == AuthenticationAdapter::OTP_QR_NEEDED ) {
+          $childView = new ViewModel();
+          /** @var \extCMS\GoogleAuthenticator\GoogleAuthenticator $GA */
+          $GA = $this->getServiceLocator()->get('GA');
+          $img = $GA->getUrl($this->getServiceLocator()->get('extCMS')->get('sitename'), $result->getMessages()['identity_object']->getSecret());
+          $childView->setTemplate('ext-cms/manager/ga-qr-code');
+          $childView->setVariable('img', $img);
+          $view->addChild($childView);
+          return $view;
+
+        }
+        
+        $childView->setVariable('message', 'Credentials Wrong!!');
+        $view->addChild($childView);
+        return $view;
       }
     }
     
     $view->addChild($childView);
-    $childView->form = $form;
     return $view;
   }
   
+  /**
+   * Action to manage configuration
+   * @throws ManagerException
+   */
   public function setAction()
   {
     if( !$this->isLoggedIn )
       $this->loginRedirect();
     
+    $translator = $this->getServiceLocator()->get('translator');
     $forms = array();
     $request = $this->getRequest();
     if ($request->isPost() && $request->getPost()['isNew']) {
@@ -106,15 +124,17 @@ class ManagerController extends ManagerControllerFactory
         $form->setData($option->getArray());
       
       }        
-    
+      
+      $form->get('submit')->setValue($translator->translate('Save'));
       $forms[] = $form;
 
     }
     $newForm = new ConfigForm();
     $newForm->get('isNew')->setValue(true);
+    $newForm->get('submit')->setValue($translator->translate('Add'));
     
     $forms[] = $newForm;
     
-    return array('forms' => $forms, 'msg' => $msg);
+    return array('forms' => $forms);
   }
 }
