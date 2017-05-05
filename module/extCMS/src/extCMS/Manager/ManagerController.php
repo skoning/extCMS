@@ -18,7 +18,8 @@ class ManagerController extends ManagerControllerFactory
    */
   public function loginAction()
   {
-    $view = new ViewModel();
+    return $this->getServiceLocator()->get('extCMSManager')->login( $this->getRequest(), $this );
+    /*$view = new ViewModel();
     $childView = new ViewModel();
     $childView->setTemplate('ext-cms/manager/login');
     $view->setTemplate('managerLayout');
@@ -32,10 +33,12 @@ class ManagerController extends ManagerControllerFactory
     
     /**
      * @var AuthenticationService $authService
-     */
+     * /
     $authService = $this->getServiceLocator()->get('extCMSAuthenticationService');
     $adapter = $authService->getAdapter();
+    
     $childView->setVariable('form', $form);
+    
     if ($request->isPost()) {
       $data = $request->getPost();
       $form->setData($data);
@@ -54,7 +57,7 @@ class ManagerController extends ManagerControllerFactory
         
         if( $result->getCode() == AuthenticationAdapter::OTP_QR_NEEDED ) {
           $childView = new ViewModel();
-          /** @var \extCMS\GoogleAuthenticator\GoogleAuthenticator $GA */
+          /** @var \extCMS\GoogleAuthenticator\GoogleAuthenticator $GA * /
           $GA = $this->getServiceLocator()->get('GA');
           $img = $GA->getUrl($this->getServiceLocator()->get('extCMS')->get('sitename'), $result->getMessages()['identity_object']->getSecret());
           $childView->setTemplate('ext-cms/manager/ga-qr-code');
@@ -72,6 +75,7 @@ class ManagerController extends ManagerControllerFactory
     
     $view->addChild($childView);
     return $view;
+    */
   }
   
   /**
@@ -98,6 +102,7 @@ class ManagerController extends ManagerControllerFactory
       }
     }
     $configOptions = $this->getEntityManager()->getRepository('extCMS\Entity\Config')->findAll();
+    
     foreach( $configOptions as $option) {
       /** @var Config $option */
       $form = new ConfigForm($option->getKey());
@@ -129,6 +134,7 @@ class ManagerController extends ManagerControllerFactory
       $forms[] = $form;
 
     }
+    
     $newForm = new ConfigForm();
     $newForm->get('isNew')->setValue(true);
     $newForm->get('submit')->setValue($translator->translate('Add'));

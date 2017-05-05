@@ -2,13 +2,10 @@
 {% do form().prepare() %}
 {% do form.setAttribute('action', url('manager/login')) %}
 {{ form().openTag(form)|raw}}
-
 {% if message is not empty %}
 <div class="bg-danger">{{ message }}</div>
 {% endif %}
 {{ formElement(form.get('login_csrf')) }}
 {{ formElement(form.get('redirect_url')) }}
-{{ formRow(form.get('username').setOption('label', translate('Username'))) }}
-{{ formRow(form.get('password').setOption('label', translate('Password'))) }}
-{{ formRow(form.get('login').setValue(translate('Login'))) }}
+{{ formRow(form.get('username').setOption('label', translate('Username'))) }}{{ formRow(form.get('password').setOption('label', translate('Password'))) }}{{ formRow(form.get('login').setValue(translate('Login'))) }}
 {{ form().closeTag(form)|raw }}

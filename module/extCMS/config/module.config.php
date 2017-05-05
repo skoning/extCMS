@@ -75,7 +75,19 @@ $config = array(
                 'action' => 'set'
               )
             )
-          )
+          ),
+          'manager-extension' => array(
+            'type' => 'literal',
+            'may_terminate' => true,
+            'options' => array(
+              'route' => '/extension',
+              'defaults' => array(
+                'controller' => 'page',
+                'action' => 'extension'
+              )
+            )
+          ),
+            
         )
       )
     )
@@ -157,11 +169,12 @@ $config = array(
     'extensions' => array()
   )
 );
-
+/*
 // Get twig extensions
 $files = glob('data/twigExtensions/*.php');
 foreach ($files as $file) {
   $file = basename($file, '.php');
   $config['view_helpers']['invokables'][$file] = 'extCMS\twigExtensions\\' . $file;
 }
+*/
 return $config;

@@ -1,9 +1,15 @@
 <?php
 namespace extCMS\twigExtensions;
  
-use Zend\View\Helper\AbstractHelper;
+use Twig_Extension;
 
-class test extends AbstractHelper {
+class test extends Twig_Extension 
+{
+  
+  public function getName() 
+  {
+    return 'test';
+  }
   
   public function __invoke($One, $two, $three)
   {

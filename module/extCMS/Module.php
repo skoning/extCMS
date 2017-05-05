@@ -9,18 +9,31 @@ use extCMS\Listener\ServiceManagerListener;
 use Zend\EventManager\EventInterface;
 use extCMS\Manager\AuthenticationAdapter;
 
-class Module implements ConfigProviderInterface, AutoloaderProviderInterface, ServiceProviderInterface, BootstrapListenerInterface
+class Module implements ConfigProviderInterface, AutoloaderProviderInterface, BootstrapListenerInterface
 {
   public function onBootstrap(EventInterface $e)
   {
-    /** 
-     * @var \Zend\ServiceManager\ServiceManager
-     */
+    /* @var $sm \Zend\ServiceManager\ServiceManager */
     $sm = $e->getApplication()->getServiceManager();
     $em = $sm->get('doctrine.entitymanager.orm_default');
     $dem = $em->getEventManager();
     $dem->addEventListener(array(\Doctrine\ORM\Events::postLoad), new ServiceManagerListener($sm));
+    
     $allowOverride = $sm->getAllowOverride();
+    $sm->setAllowOverride(true);
+    
+    // Get Twig Extensions
+    $extensions = $em->getRepository('extCMS\Entity\Extension')->findAll();
+    
+    $zfctwig = array();
+    
+    foreach( $extensions as $extension ) {
+      $zfctwig[$extension->getName()] = 'extCMS\twigExtensions\\' . $extension->getName();
+    }
+    
+    $sm->setService('zfctwig', $zfctwig);
+    
+    $sm->setAllowOverride($allowOverride);
   }
   
   public function getAutoloaderConfig()
@@ -30,7 +43,6 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Se
             'namespaces' => array(
                 __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 __NAMESPACE__ . '\twigExtensions' => 'data/twigExtensions',
-                'extCMS\GoogleAuthentication' => __DIR__ . '/src/extCMS/GoogleAuthenticator' 
             )
         )
     );
@@ -39,7 +51,6 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Se
   public function getConfig()
   {
     $config = include __DIR__ . '/config/module.config.php';
-    
     return $config;
   }
   
@@ -50,11 +61,6 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Se
         'extCMSAuthenticationService' => function($serviceManager) {
           return $serviceManager->get('doctrine.authenticationservice.orm_default');
         },
-      ),
-      'zfctwig' => array(
-        'extensions' => array(
-          'test2',
-        )
       ),
     );
   }
